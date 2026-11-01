@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>ACIX Videos</title>
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;600;800&display=swap">
+<style>
+  :root {
+    --bg: #0f1412; --panel: #18201c; --line: #2a3530; --fg: #eef3ec; --muted: #9aa69a;
+    --money: #5fd38f; --gold: #f6b860; --danger: #ff7a6b; --ink: #0b1a12;
+    --display: "Archivo Black", "Arial Black", system-ui, sans-serif;
+    --body: "Manrope", system-ui, -apple-system, sans-serif;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 20px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px)); }
+  .brand { font-family: var(--display); font-size: 22px; letter-spacing: 0.02em; }
+  .brand b { color: var(--money); font-weight: 400; }
+  button, .btn { font: inherit; font-weight: 800; font-size: 15px; cursor: pointer; text-align: center; text-decoration: none;
+    padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); color: var(--fg);
+    display: inline-flex; align-items: center; justify-content: center; min-height: 46px; }
+  button.primary { background: var(--money); border-color: var(--money); color: var(--ink); }
+  button:disabled { opacity: 0.6; cursor: default; }
+  button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .muted { color: var(--muted); margin: 0; }
+  .kicker { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
+  [hidden] { display: none !important; }
+
+  .gate { min-height: 85svh; display: grid; place-items: center; }
+  .gate form { width: 100%; max-width: 360px; display: grid; gap: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 24px; }
+  .gate label { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .gate input[type=password] { font: inherit; font-size: 18px; padding: 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); width: 100%; }
+  .remember { display: flex; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); }
+  .err { color: var(--danger); font-size: 14px; min-height: 21px; margin: 0; }
+
+  header { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  header button { min-height: 38px; padding: 8px 12px; font-size: 14px; }
+  nav { display: flex; margin: 18px 0 22px; border-bottom: 1px solid var(--line); }
+  nav a { color: var(--muted); text-decoration: none; font-weight: 800; padding: 10px 4px; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+  nav a[aria-current="page"] { color: var(--fg); border-bottom-color: var(--money); }
+  h1 { font-family: var(--display); font-weight: 400; font-size: clamp(26px, 6vw, 40px); line-height: 1.05; margin: 0; text-wrap: balance; }
+
+  .shelf { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); }
+  .series-card { display: grid; text-decoration: none; color: inherit; background: var(--panel); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; transition: transform .15s, border-color .15s; }
+  .series-card:hover { transform: translateY(-2px); border-color: var(--money); }
+  .cover { aspect-ratio: 4 / 5; width: 100%; max-width: 100%; object-fit: cover; object-position: center 30%; display: block; background: #000; }
+  .series-card .info { padding: 14px 16px 16px; display: grid; gap: 4px; }
+  .series-card h2 { font-family: var(--display); font-weight: 400; font-size: 22px; margin: 0; line-height: 1.15; }
+  .count { font-size: 13px; font-weight: 800; color: var(--money); }
+
+  .back { display: inline-flex; color: var(--muted); text-decoration: none; font-weight: 800; margin-bottom: 14px; }
+  .series-head { display: grid; gap: 6px; margin-bottom: 20px; }
+  .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); }
+  .ep { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; display: grid; align-content: start; }
+  .player { position: relative; aspect-ratio: 9 / 16; background: #000 center / cover no-repeat; }
+  .player video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; background: #000; }
+  .play { position: absolute; inset: 0; margin: auto; width: 84px; height: 84px; border-radius: 999px; background: rgba(15,20,18,0.75); border: 2px solid var(--fg); font-size: 15px; }
+  .body { padding: 16px; display: grid; gap: 12px; min-width: 0; }
+  .ep h3 { font-family: var(--display); font-weight: 400; font-size: 21px; margin: 0; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); font-variant-numeric: tabular-nums; }
+  .chip.money { color: var(--money); }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .caption { white-space: pre-wrap; font-size: 14px; color: var(--muted); background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin: 0; overflow-wrap: anywhere; }
+  .toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--fg); color: var(--bg); font-weight: 800; padding: 10px 16px; border-radius: 999px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .toast.on { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="gate" id="gate">
+    <form id="login">
+      <div class="brand">ACIX <b>Videos</b></div>
+      <p class="muted">Private library. Enter the password to continue.</p>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <label class="remember"><input type="checkbox" id="remember" checked> Remember on this device</label>
+      <button class="primary" type="submit" id="go">Enter</button>
+      <p class="err" id="err" role="alert"></p>
+    </form>
+  </section>
+
+  <div id="app" hidden>
+    <header>
+      <div class="brand">ACIX <b>Videos</b></div>
+      <button type="button" id="logout">Log out</button>
+    </header>
+    <nav aria-label="Sections"><a href="#creations" aria-current="page">Creations</a></nav>
+    <main id="view"></main>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<template id="tpl-series">
+  <a class="series-card">
+    <img class="cover" alt="">
+    <div class="info"><span class="kicker"></span><h2></h2><p class="muted tag"></p><span class="count"></span></div>
+  </a>
+</template>
+<template id="tpl-ep">
+  <article class="ep">
+    <div class="player"><button type="button" class="play" aria-label="Play">▶ Play</button></div>
+    <div class="body">
+      <h3></h3>
+      <div class="chips"></div>
+      <div class="actions">
+        <button type="button" class="primary dl">Download</button>
+        <button type="button" class="share">Save / Share</button>
+        <button type="button" class="copylink">Copy link</button>
+        <button type="button" class="copycap">Copy caption</button>
+      </div>
+      <pre class="caption"></pre>
+    </div>
+  </article>
+</template>
+
+<script>
+  // All private files are AES-GCM encrypted with a key derived from the password (see pages-build.js).
+  const KEY_STORE = 'acix-key';
+  let KEY = null, CATALOG = [];
+  const blobs = new Map();
+  const $ = (s, r = document) => r.querySelector(s);
+  const toast = m => { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 1800); };
+  const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+  const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  const store = {
+    get() { try { return localStorage.getItem(KEY_STORE); } catch { return null; } },
+    set(v) { try { v ? localStorage.setItem(KEY_STORE, v) : localStorage.removeItem(KEY_STORE); } catch {} },
+  };
+
+  async function deriveKey(password) {
+    const vault = await (await fetch('vault.json', { cache: 'no-store' })).json();
+    const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+    return crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt: b64(vault.salt), iterations: vault.iter },
+      base, { name: 'AES-GCM', length: 256 }, true, ['decrypt']);
+  }
+  async function open(url) {
+    const buf = new Uint8Array(await (await fetch(url, { cache: 'no-store' })).arrayBuffer());
+    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: buf.slice(0, 12) }, KEY, buf.slice(12));
+  }
+  async function blobFor(url, type) {
+    if (!blobs.has(url)) blobs.set(url, open(url).then(b => new Blob([b], { type })));
+    return blobs.get(url);
+  }
+  async function unlockWith(key) {
+    KEY = key;
+    CATALOG = JSON.parse(new TextDecoder().decode(await open('catalog.enc'))); // throws on a wrong key
+  }
+
+  async function copyText(text, done) { try { await navigator.clipboard.writeText(text); toast(done); } catch { window.prompt('Copy this:', text); } }
+
+  async function withBusy(btn, label, fn) {
+    const old = btn.textContent; btn.disabled = true; btn.textContent = label;
+    try { await fn(); } catch (e) { if (!e || e.name !== 'AbortError') toast('Something went wrong. Try again.'); }
+    btn.disabled = false; btn.textContent = old;
+  }
+
+  function renderCreations() {
+    const view = $('#view');
+    view.innerHTML = '<div class="shelf" id="shelf"></div>';
+    for (const s of CATALOG) {
+      const n = $('#tpl-series').content.cloneNode(true);
+      const a = $('.series-card', n);
+      a.href = '#' + s.id;
+      a.setAttribute('aria-label', `${s.title}, ${plural(s.episodes.length, 'episode')}`);
+      const img = $('.cover', n);
+      if (s.cover) blobFor(s.cover, 'image/jpeg').then(b => { img.src = URL.createObjectURL(b); });
+      $('.kicker', n).textContent = s.season || '';
+      $('h2', n).textContent = s.title;
+      $('.tag', n).textContent = s.tagline || '';
+      $('.count', n).textContent = plural(s.episodes.length, 'episode');
+      $('#shelf').appendChild(n);
+    }
+    document.title = 'Creations · ACIX Videos';
+  }
+
+  function renderSeries(s) {
+    const view = $('#view');
+    view.innerHTML = `<a class="back" href="#creations">← Creations</a>
+      <section class="series-head"><span class="kicker"></span><h1></h1><p class="muted"></p></section>
+      <div class="grid" id="eps"></div>`;
+    $('.series-head .kicker').textContent = `${s.season || ''} · ${plural(s.episodes.length, 'episode')} out`;
+    $('.series-head h1').textContent = s.title;
+    $('.series-head p').textContent = s.tagline || '';
+    for (const ep of s.episodes) {
+      const n = $('#tpl-ep').content.cloneNode(true);
+      const player = $('.player', n);
+      if (ep.poster) blobFor(ep.poster, 'image/jpeg').then(b => { player.style.backgroundImage = `url(${URL.createObjectURL(b)})`; });
+      $('h3', n).textContent = ep.title;
+      [[ep.days, ''], [ep.money, 'money'], [ep.duration ? ep.duration + ' s' : null, ''], [ep.sizeMB ? ep.sizeMB + ' MB' : null, '']]
+        .filter(([t]) => t).forEach(([t, c]) => { const sp = document.createElement('span'); sp.className = 'chip ' + c; sp.textContent = t; $('.chips', n).appendChild(sp); });
+      $('.caption', n).textContent = ep.caption;
+      const video = () => blobFor(ep.video, 'video/mp4');
+      const playBtn = $('.play', n);
+      playBtn.addEventListener('click', () => withBusy(playBtn, 'Loading…', async () => {
+        const v = document.createElement('video');
+        v.controls = true; v.playsInline = true; v.src = URL.createObjectURL(await video());
+        player.appendChild(v); playBtn.remove(); v.play().catch(() => {});
+      }));
+      $('.dl', n).addEventListener('click', e => withBusy(e.currentTarget, 'Preparing…', async () => {
+        const a = document.createElement('a'); a.href = URL.createObjectURL(await video()); a.download = ep.file; a.click();
+        toast('Downloading');
+      }));
+      $('.share', n).addEventListener('click', e => withBusy(e.currentTarget, 'Preparing…', async () => {
+        const file = new File([await video()], ep.file, { type: 'video/mp4' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], text: ep.caption });
+        else { const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = ep.file; a.click(); toast('Downloading'); }
+      }));
+      $('.copylink', n).addEventListener('click', () => copyText(location.href.split('#')[0] + '#' + s.id, 'Link copied'));
+      $('.copycap', n).addEventListener('click', () => copyText(ep.caption, 'Caption copied'));
+      $('#eps').appendChild(n);
+    }
+    document.title = `${s.title} · ACIX Videos`;
+  }
+
+  function route() {
+    const s = CATALOG.find(x => x.id === location.hash.slice(1));
+    s ? renderSeries(s) : renderCreations();
+    window.scrollTo(0, 0);
+  }
+  function showApp() { $('#gate').hidden = true; $('#app').hidden = false; route(); }
+
+  $('#login').addEventListener('submit', async e => {
+    e.preventDefault();
+    const go = $('#go'); go.disabled = true; go.textContent = 'Checking…'; $('#err').textContent = '';
+    try {
+      const key = await deriveKey($('#password').value);
+      await unlockWith(key);
+      if ($('#remember').checked) {
+        const raw = new Uint8Array(await crypto.subtle.exportKey('raw', key));
+        store.set(btoa(String.fromCharCode(...raw)));
+      }
+      $('#password').value = '';
+      showApp();
+    } catch { $('#err').textContent = 'Wrong password. Try again.'; }
+    go.disabled = false; go.textContent = 'Enter';
+  });
+  $('#logout').addEventListener('click', () => { store.set(null); location.hash = ''; location.reload(); });
+  window.addEventListener('hashchange', () => { if (!$('#app').hidden) route(); });
+
+  (async () => {
+    const saved = store.get();
+    if (!saved) return;
+    try { await unlockWith(await crypto.subtle.importKey('raw', b64(saved), 'AES-GCM', true, ['decrypt'])); showApp(); }
+    catch { store.set(null); }
+  })();
+</script>
+</body>
+</html>

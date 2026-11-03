@@ -245,6 +245,13 @@
   window.addEventListener('hashchange', () => { if (!$('#app').hidden) route(); });
 
   (async () => {
+    // open site (no password): the key comes with vault.json
+    $('#gate').hidden = true;
+    try {
+      const vault = await (await fetch('vault.json', { cache: 'no-store' })).json();
+      if (vault.open) { $('#logout').hidden = true; await unlockWith(await crypto.subtle.importKey('raw', b64(vault.open), 'AES-GCM', false, ['decrypt'])); showApp(); return; }
+    } catch {}
+    $('#gate').hidden = false;
     const saved = store.get();
     if (!saved) return;
     try { await unlockWith(await crypto.subtle.importKey('raw', b64(saved), 'AES-GCM', true, ['decrypt'])); showApp(); }
